@@ -1,6 +1,8 @@
 package core;
 
 import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 import core.enums.Constellation;
 
@@ -22,7 +24,56 @@ public class Devotion {
 		this.pointsRemaining = devotion.pointsRemaining;
 	}
 
-	public boolean canAssign(Constellation constellation) {
+	public Set<Node<Devotion>> spawnChildren() {
+		Set<Node<Devotion>> children = new HashSet<Node<Devotion>>();
+		for (Constellation constellation : Constellation.values()) {
+			Devotion assignChild = this.spawnWithAssign(constellation);
+			Devotion unassignChild = this.spawnWithUnassign(constellation);
+
+			if (assignChild != null) {
+				String pathString = String.format("+ %s", constellation.getProperName());
+				Node<Devotion> child = new Node<Devotion>(assignChild, pathString);
+				children.add(child);
+			}
+
+			if (unassignChild != null) {
+				for (Constellation swap : Constellation.values()) {
+					if (swap == constellation) {
+						continue;
+					}
+					
+					Devotion swapChild = unassignChild.spawnWithAssign(swap);
+					if (swapChild != null) {
+						String pathString = String.format("- %s%s+ %s", constellation.getProperName(),
+								System.getProperty("line.separator"), swap.getProperName());
+						Node<Devotion> child = new Node<Devotion>(swapChild, pathString);
+						children.add(child);
+					}
+				}
+			}
+		}
+		return children;
+	}
+
+	public Devotion spawnWithAssign(Constellation constellation) {
+		if (!canAssign(constellation)) {
+			return null;
+		}
+		Devotion spawn = new Devotion(this);
+		spawn.assign(constellation);
+		return spawn;
+	}
+
+	public Devotion spawnWithUnassign(Constellation constellation) {
+		if (!canUnassign(constellation)) {
+			return null;
+		}
+		Devotion spawn = new Devotion(this);
+		spawn.unassign(constellation);
+		return spawn;
+	}
+
+	private boolean canAssign(Constellation constellation) {
 		if (this.isAssigned(constellation)) {
 			return false;
 		}
@@ -40,7 +91,7 @@ public class Devotion {
 		return true;
 	}
 
-	public boolean canUnassign(Constellation constellation) {
+	private boolean canUnassign(Constellation constellation) {
 		if (!this.isAssigned(constellation)) {
 			return false;
 		}
@@ -66,7 +117,7 @@ public class Devotion {
 		return true;
 	}
 
-	public void assign(Constellation constellation) {
+	private void assign(Constellation constellation) {
 		pointsRemaining -= constellation.getPointsRequired();
 		constellations[constellation.ordinal()] = true;
 		for (int i = 0; i < 5; i++) {
@@ -74,7 +125,7 @@ public class Devotion {
 		}
 	}
 
-	public void unassign(Constellation constellation) {
+	private void unassign(Constellation constellation) {
 		pointsRemaining += constellation.getPointsRequired();
 		constellations[constellation.ordinal()] = false;
 		for (int i = 0; i < 5; i++) {
@@ -126,6 +177,20 @@ public class Devotion {
 		System.out.println("original can unassign targo (TRUE): " + d.canUnassign(Constellation.TARGO_THE_BUILDER));
 		d.unassign(Constellation.LION);
 		System.out.println("original can unassign targo (FALSE): " + d.canUnassign(Constellation.TARGO_THE_BUILDER));
+		d.assign(Constellation.SAILORS_GUIDE);
+		System.out.println("Children spawn test:");
+		System.out.println("points remaining (33): " + d.pointsRemaining);
+		System.out.println("Affinity original (0,0,0,4,13): " + Arrays.toString(d.affinity));
+		Set<Node<Devotion>> children = d.spawnChildren();
+		System.out.println("points remaining after children (33): " + d.pointsRemaining);
+		System.out.println("Affinity after children (0,0,0,4,13): " + Arrays.toString(d.affinity));
+		System.out.println("List of children size: " + children.size());
+		int i = 1;
+		for (Node<Devotion> child : children) {
+			System.out.println(i + ":");
+			System.out.println(child.getPathAnnotation());
+			i++;
+		}
 
 	}
 }
