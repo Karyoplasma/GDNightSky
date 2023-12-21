@@ -18,6 +18,7 @@ public class DevotionEvaluator {
 //		}
 //		return INSTANCE;
 //	}
+	//ich schreibe code
 	
 	public static double estimateCost(Devotion candidate, Devotion goal) {
 		// TODO Auto-generated method stub
