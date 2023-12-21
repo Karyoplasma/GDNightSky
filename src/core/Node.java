@@ -3,19 +3,20 @@ package core;
 import java.util.HashSet;
 import java.util.Set;
 
-public class Node<T> {
+public class Node<T> implements Comparable<Node<T>> {
 
 	T devotion;
 	String pathAnnotiation;
 	Node<T> parent;
 	Set<Node<T>> children;
+	private double costFromStart, heuristicCost;
 
 	public Node(T devotion, String pathAnnotation) {
 		this.devotion = devotion;
 		this.pathAnnotiation = pathAnnotation;
 		this.children = new HashSet<Node<T>>();
 	}
-	
+
 	public boolean isRoot() {
 		return (parent == null);
 	}
@@ -35,15 +36,46 @@ public class Node<T> {
 	public String getPathAnnotation() {
 		return pathAnnotiation;
 	}
-	
+
 	@Override
 	public int hashCode() {
 		return devotion.hashCode();
 	}
-	
+
 	@Override
 	public boolean equals(Object o) {
 		return devotion.equals(o);
 	}
+
+	public double getCostFromStart() {
+		return costFromStart;
+	}
+
+	public int getCostTo(Node<Devotion> neighbor) {
+		return 1;
+	}
+
+	public void setCostFromStart(double costFromStart) {
+		this.costFromStart = costFromStart;
+	}
+
+	public void setHeuristicCost(double heuristicCost) {
+		this.heuristicCost = heuristicCost;
+	}
+
+	public void setParent(Node<T> parent) {
+		this.parent = parent;
+	}
+	
+	private double getHeuristicCost() {
+		return heuristicCost;
+	}
+	
+	@Override
+	public int compareTo(Node<T> o) {		
+		return Double.compare(heuristicCost, o.getHeuristicCost());
+	}
+
+	
 
 }
