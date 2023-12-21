@@ -1,3 +1,10 @@
+# Eclipse settings
+.settings/
+*.prefs
+
+# Binaries
+bin/
+
 # Compiled class file
 *.class
 
