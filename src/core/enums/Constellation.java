@@ -139,4 +139,17 @@ public enum Constellation {
 		return pointsRequired;
 	}
 	
+	public int getTier() {
+		if (this.ordinal() <= Constellation.PRIMORDIAL_CROSSROADS.ordinal()) {
+			return 0;
+		}
+		if (this.ordinal() <= Constellation.WRAITH.ordinal()) {
+			return 1;
+		}
+		if (this.ordinal() <= Constellation.ULZAAD_HERALD_OF_KORVAAK.ordinal()) {
+			return 2;
+		}
+		return 3;
+	}
+	
 }

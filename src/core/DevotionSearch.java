@@ -38,9 +38,8 @@ public class DevotionSearch {
 	    }
 
 	    private static double estimateCostToGoal(Node<Devotion> node, Node<Devotion> goal) {
-	        // Implement your heuristic function here
-	        // This function should estimate the cost from 'node' to the 'goal'
-	        return 0.0; // Replace with actual estimation
+	        
+	        return DevotionEvaluator.estimateCost(node.getValue(), goal.getValue());
 	    }
 	    
 }
