@@ -15,8 +15,10 @@ public class Node<T> implements Comparable<Node<T>> {
 		this.devotion = devotion;
 		this.pathAnnotiation = pathAnnotation;
 		this.children = new HashSet<Node<T>>();
+		this.costFromStart = 0.0;
+		this.heuristicCost = Double.MAX_VALUE;
 	}
-
+	
 	public boolean isRoot() {
 		return (parent == null);
 	}
@@ -42,17 +44,12 @@ public class Node<T> implements Comparable<Node<T>> {
 		return devotion.hashCode();
 	}
 
-	@Override
-	public boolean equals(Object o) {
-		return devotion.equals(o);
-	}
-
 	public double getCostFromStart() {
 		return costFromStart;
 	}
 
-	public int getCostTo(Node<Devotion> neighbor) {
-		return 1;
+	public double getCostTo(Node<Devotion> neighbor) {
+		return 0.25;
 	}
 
 	public void setCostFromStart(double costFromStart) {
@@ -67,7 +64,7 @@ public class Node<T> implements Comparable<Node<T>> {
 		this.parent = parent;
 	}
 	
-	private double getHeuristicCost() {
+	public double getHeuristicCost() {
 		return heuristicCost;
 	}
 	
@@ -76,6 +73,15 @@ public class Node<T> implements Comparable<Node<T>> {
 		return Double.compare(heuristicCost, o.getHeuristicCost());
 	}
 
-	
+	@Override
+	public boolean equals(Object obj) {
+	    if (!(obj instanceof Node<?>)) {
+	        return false;
+	    }
+
+	    Node<?> otherNode = (Node<?>) obj;
+
+	   return this.getValue().equals(otherNode.getValue());
+	}
 
 }

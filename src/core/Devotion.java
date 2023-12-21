@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
+import core.enums.Affinity;
 import core.enums.Constellation;
 
 public class Devotion {
@@ -11,13 +12,13 @@ public class Devotion {
 	private boolean[] constellations;
 	private int[] affinity;
 	private int pointsRemaining;
-
-	public Devotion(boolean[] constellations, int[] affinity, int remainingPoints) {
-		this.constellations = constellations;
-		this.affinity = affinity;
-		this.pointsRemaining = remainingPoints;
+	
+	public Devotion() {
+		this.constellations = new boolean[Constellation.values().length];
+		this.affinity = new int[5];
+		this.pointsRemaining = 55;
 	}
-
+	
 	public Devotion(Devotion devotion) {
 		this.constellations = Arrays.copyOf(devotion.constellations, devotion.constellations.length);
 		this.affinity = Arrays.copyOf(devotion.affinity, devotion.affinity.length);
@@ -117,7 +118,7 @@ public class Devotion {
 		return true;
 	}
 
-	private void assign(Constellation constellation) {
+	public void assign(Constellation constellation) {
 		pointsRemaining -= constellation.getPointsRequired();
 		constellations[constellation.ordinal()] = true;
 		for (int i = 0; i < 5; i++) {
@@ -125,7 +126,7 @@ public class Devotion {
 		}
 	}
 
-	private void unassign(Constellation constellation) {
+	public void unassign(Constellation constellation) {
 		pointsRemaining += constellation.getPointsRequired();
 		constellations[constellation.ordinal()] = false;
 		for (int i = 0; i < 5; i++) {
@@ -133,10 +134,22 @@ public class Devotion {
 		}
 	}
 
-	private boolean isAssigned(Constellation constellation) {
+	public boolean isAssigned(Constellation constellation) {
 		return constellations[constellation.ordinal()];
 	}
-
+	
+	public int[] getAffinity() {
+		return affinity;
+	}
+	
+	public int getAffinity(Affinity affinity) {
+		return this.affinity[affinity.ordinal()];
+	}
+	
+	public int getPointsRemaining() {
+		return pointsRemaining;
+	}
+	
 	@Override
 	public int hashCode() {
 		return Arrays.hashCode(constellations);
@@ -150,10 +163,10 @@ public class Devotion {
 		Devotion other = (Devotion) o;
 		return Arrays.equals(constellations, other.constellations);
 	}
-
+	
 	public static void main(String[] args) {
 		// lol syso testing, too tired to write unit tests
-		Devotion d = new Devotion(new boolean[Constellation.values().length], new int[5], 55);
+		Devotion d = new Devotion();
 		d.assign(Constellation.ORDER_CROSSROADS);
 		d.assign(Constellation.TORTOISE);
 		d.assign(Constellation.TSUNAMI);
