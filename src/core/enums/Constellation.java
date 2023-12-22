@@ -123,6 +123,7 @@ public enum Constellation {
 		this.pointsRequired = pointsRequired;
 	}
 	
+	@Deprecated
 	public String getProperName() {
 		return properName;
 	}
@@ -152,4 +153,8 @@ public enum Constellation {
 		return 3;
 	}
 	
+	@Override
+	public String toString() {
+		return properName;
+	}
 }

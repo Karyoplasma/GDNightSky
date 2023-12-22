@@ -49,7 +49,7 @@ public class Node<T> implements Comparable<Node<T>> {
 	}
 
 	public double getCostTo(Node<Devotion> neighbor) {
-		return 0.25;
+		return 1.0;
 	}
 
 	public void setCostFromStart(double costFromStart) {
