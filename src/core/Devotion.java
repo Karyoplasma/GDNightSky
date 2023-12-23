@@ -1,7 +1,9 @@
 package core;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import core.enums.Affinity;
@@ -24,7 +26,8 @@ public class Devotion {
 		this.affinity = Arrays.copyOf(devotion.affinity, 5);
 		this.pointsRemaining = devotion.pointsRemaining;
 	}
-
+	
+	// TODO remove swapping, ugly side effects because step cost is equal to step cost of just adding...
 	public Set<Node<Devotion>> spawnChildren() {
 		Set<Node<Devotion>> children = new HashSet<Node<Devotion>>();
 		for (Constellation constellation : Constellation.values()) {
@@ -136,6 +139,11 @@ public class Devotion {
 
 	public boolean isAssigned(Constellation constellation) {
 		return constellations[constellation.ordinal()];
+	}
+	
+	public List<Constellation> isLegalConfiguration() {
+		List<Constellation> ret = new ArrayList<Constellation>();
+		return ret;
 	}
 	
 	public int[] getAffinity() {

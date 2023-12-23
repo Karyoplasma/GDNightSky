@@ -8,6 +8,7 @@ import javax.swing.JTree;
 import javax.swing.tree.DefaultMutableTreeNode;
 
 import core.enums.Constellation;
+import model.ChosenDevotionTableModel;
 
 public class ConstellationTreeMouseAdapter extends MouseAdapter {
 
@@ -26,10 +27,9 @@ public class ConstellationTreeMouseAdapter extends MouseAdapter {
 			if (node == null || !(node.isLeaf())) {
 				return;
 			}
-			Constellation constellation = (Constellation) node.getUserObject();
 
-			// do things here!
-			System.out.println(constellation);
+			Constellation constellation = (Constellation) node.getUserObject();
+			((ChosenDevotionTableModel) tableChosenDevotion.getModel()).addConstellation(constellation);
 		}
 	}
 }

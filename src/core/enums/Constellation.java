@@ -122,11 +122,6 @@ public enum Constellation {
 		this.affinityBonus = affinityBonus;
 		this.pointsRequired = pointsRequired;
 	}
-	
-	@Deprecated
-	public String getProperName() {
-		return properName;
-	}
 
 	public int[] getRequiredAffinity() {
 		return requiredAffinity;
