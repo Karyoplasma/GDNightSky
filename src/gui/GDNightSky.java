@@ -13,13 +13,18 @@ import javax.swing.JPanel;
 import java.awt.BorderLayout;
 import javax.swing.JTree;
 import action.SearchButtonAction;
+import action.ClearButtonAction;
 import listener.ChosenDevotionMouseAdapter;
 import listener.ConstellationTreeMouseAdapter;
+import listener.FilterDocumentListener;
 import model.ChosenDevotionTableModel;
+import model.ConstellationTreeFilterModel;
 import model.ConstellationTreeModel;
 import model.ResultTableModel;
 
 import javax.swing.JButton;
+import javax.swing.JTextField;
+import java.awt.Rectangle;
 
 public class GDNightSky {
 
@@ -30,6 +35,8 @@ public class GDNightSky {
 	private JScrollPane scrollPaneConstellationTree;
 	private JTree constellationTree;
 	private JButton btnSearch;
+	private JTextField textFieldFilter;
+	private JButton btnClear;
 
 	/**
 	 * Launch the application.
@@ -59,18 +66,18 @@ public class GDNightSky {
 	 */
 	private void initialize() {
 		frame = new JFrame();
+		frame.setBounds(new Rectangle(100, 100, 500, 600));
 		frame.setTitle("GD Night Sky");
-		frame.setBounds(100, 100, 450, 300);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.getContentPane().setLayout(new MigLayout("", "[grow][grow][]", "[][grow][][grow][]"));
+		frame.getContentPane().setLayout(new MigLayout("", "[grow][grow][]", "[][grow][][][grow][]"));
 
 		JLabel lblChooseDevotions = new JLabel("Choose desired constellations:");
 		lblChooseDevotions.setFont(new Font("Tahoma", Font.BOLD, 14));
-		frame.getContentPane().add(lblChooseDevotions, "cell 0 0");
-		
+		frame.getContentPane().add(lblChooseDevotions, "cell 0 0,alignx trailing");
+
 		JScrollPane scrollPaneChosenDevotions = new JScrollPane();
 		frame.getContentPane().add(scrollPaneChosenDevotions, "cell 1 1 2 1,grow");
-		
+
 		tableChosenDevotion = new JTable(new ChosenDevotionTableModel());
 		tableChosenDevotion.addMouseListener(new ChosenDevotionMouseAdapter(tableChosenDevotion));
 		tableChosenDevotion.setRowSelectionAllowed(false);
@@ -80,23 +87,36 @@ public class GDNightSky {
 		tableChosenDevotion.setShowHorizontalLines(false);
 		tableChosenDevotion.setShowVerticalLines(false);
 		scrollPaneChosenDevotions.setViewportView(tableChosenDevotion);
-		
+
 		scrollPaneConstellationTree = new JScrollPane();
 		frame.getContentPane().add(scrollPaneConstellationTree, "cell 0 1,grow");
-
-		constellationTree = new JTree(new ConstellationTreeModel());
-		constellationTree.addMouseListener(new ConstellationTreeMouseAdapter(constellationTree, tableChosenDevotion));
+		ConstellationTreeModel model = new ConstellationTreeModel();
+		ConstellationTreeFilterModel filter = new ConstellationTreeFilterModel(model);
+		constellationTree = new JTree(filter);
+		constellationTree.setToggleClickCount(1);
 		scrollPaneConstellationTree.setViewportView(constellationTree);
 
+		textFieldFilter = new JTextField();
+		textFieldFilter.getDocument()
+				.addDocumentListener(new FilterDocumentListener(filter, textFieldFilter, constellationTree));
+		textFieldFilter.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		frame.getContentPane().add(textFieldFilter, "cell 1 0 2 1,growx");
+		constellationTree.addMouseListener(
+				new ConstellationTreeMouseAdapter(constellationTree, tableChosenDevotion, textFieldFilter));
+
+		btnClear = new JButton(new ClearButtonAction(tableChosenDevotion));
+		btnClear.setFont(new Font("Tahoma", Font.BOLD, 14));
+		frame.getContentPane().add(btnClear, "cell 2 2,growx,aligny top");
+
 		JPanel panelSeparator = new JPanel();
-		frame.getContentPane().add(panelSeparator, "cell 0 2 3 1,grow");
+		frame.getContentPane().add(panelSeparator, "cell 0 3 3 1,grow");
 		panelSeparator.setLayout(new BorderLayout(0, 0));
 
 		separator = new JSeparator();
 		panelSeparator.add(separator, BorderLayout.CENTER);
 
 		JScrollPane scrollPaneResult = new JScrollPane();
-		frame.getContentPane().add(scrollPaneResult, "cell 0 3 2 2,grow");
+		frame.getContentPane().add(scrollPaneResult, "cell 0 4 2 2,grow");
 
 		tableResult = new JTable(new ResultTableModel());
 		tableResult.setFillsViewportHeight(true);
@@ -109,7 +129,7 @@ public class GDNightSky {
 
 		btnSearch = new JButton(new SearchButtonAction(tableChosenDevotion, tableResult));
 		btnSearch.setFont(new Font("Tahoma", Font.BOLD, 14));
-		frame.getContentPane().add(btnSearch, "cell 2 4");
+		frame.getContentPane().add(btnSearch, "cell 2 5,growx,aligny bottom");
 
 	}
 

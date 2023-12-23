@@ -27,7 +27,6 @@ public class Devotion {
 		this.pointsRemaining = devotion.pointsRemaining;
 	}
 	
-	// TODO remove swapping, ugly side effects because step cost is equal to step cost of just adding...
 	public Set<Node<Devotion>> spawnChildren() {
 		Set<Node<Devotion>> children = new HashSet<Node<Devotion>>();
 		for (Constellation constellation : Constellation.values()) {
@@ -35,25 +34,29 @@ public class Devotion {
 			Devotion unassignChild = this.spawnWithUnassign(constellation);
 
 			if (assignChild != null) {
-				String pathString = String.format("+ %s", constellation.toString());
-				Node<Devotion> child = new Node<Devotion>(assignChild, pathString);
+				Node<Devotion> child = new Node<Devotion>(assignChild);
+				child.setPathAnnotation(String.format("+ %s", constellation.toString()));
 				children.add(child);
 			}
 
 			if (unassignChild != null) {
-				for (Constellation swap : Constellation.values()) {
-					if (swap == constellation) {
-						continue;
-					}
-					
-					Devotion swapChild = unassignChild.spawnWithAssign(swap);
-					if (swapChild != null) {
-						String pathString = String.format("- %s%s+ %s", constellation.toString(),
-								System.getProperty("line.separator"), swap.toString());
-						Node<Devotion> child = new Node<Devotion>(swapChild, pathString);
-						children.add(child);
-					}
-				}
+				Node<Devotion> child = new Node<Devotion>(unassignChild);
+				child.setPathAnnotation(String.format("- %s", constellation.toString()));
+				children.add(child);
+				//swap logic not used because of side effects
+//				for (Constellation swap : Constellation.values()) {
+//					if (swap == constellation) {
+//						continue;
+//					}
+//					
+//					Devotion swapChild = unassignChild.spawnWithAssign(swap);
+//					if (swapChild != null) {
+//						String pathString = String.format("- %s%s+ %s", constellation.toString(),
+//								System.getProperty("line.separator"), swap.toString());
+//						Node<Devotion> child = new Node<Devotion>(swapChild, pathString);
+//						children.add(child);
+//					}
+//				}
 			}
 		}
 		return children;
@@ -141,8 +144,18 @@ public class Devotion {
 		return constellations[constellation.ordinal()];
 	}
 	
-	public List<Constellation> isLegalConfiguration() {
+	public List<Constellation> getIllegalConstellations() {
 		List<Constellation> ret = new ArrayList<Constellation>();
+		for (Constellation constellation : Constellation.values()) {
+			if (this.isAssigned(constellation)) {
+				for (int i = 0; i < 5; i++) {
+					if (affinity[i] < constellation.getRequiredAffinity()[i]) {
+						ret.add(constellation);
+						break;
+					}
+				}
+			}
+		}
 		return ret;
 	}
 	
@@ -171,47 +184,4 @@ public class Devotion {
 		Devotion other = (Devotion) o;
 		return Arrays.equals(constellations, other.constellations);
 	}
-	
-//	public static void main(String[] args) {
-//		// lol syso testing, too tired to write unit tests
-//		Devotion d = new Devotion();
-//		d.assign(Constellation.ORDER_CROSSROADS);
-//		d.assign(Constellation.TORTOISE);
-//		d.assign(Constellation.TSUNAMI);
-//		System.out.println("points remaining (44): " + d.pointsRemaining);
-//		System.out.println("Affinity original (0,0,0,3,8): " + Arrays.toString(d.affinity));
-//		Devotion dc = new Devotion(d);
-//		System.out.println("equals after cloning: " + d.equals(dc));
-//		System.out.println("original can unassign turtle (true): " + d.canUnassign(Constellation.TORTOISE));
-//		System.out.println("original can unassign tsunami (true): " + d.canUnassign(Constellation.TSUNAMI));
-//		System.out.println("equals after checks: " + d.equals(dc));
-//		dc.unassign(Constellation.TSUNAMI);
-//		System.out.println("equals after removing tsunami(clone): " + d.equals(dc));
-//		System.out.println("Affinity clone (0,0,0,3,3): " + Arrays.toString(dc.affinity));
-//		System.out.println("points remaining (49): " + dc.pointsRemaining);
-//		d.assign(Constellation.LION);
-//		d.assign(Constellation.TARGO_THE_BUILDER);
-//		System.out.println(
-//				"Original can assign azrakaa (false): " + d.canAssign(Constellation.AZRAKAA_THE_ETERNAL_SANDS));
-//		System.out.println("points remaining (34): " + d.pointsRemaining);
-//		System.out.println("Affinity original (0,0,0,7,8): " + Arrays.toString(d.affinity));
-//		System.out.println("original can unassign targo (TRUE): " + d.canUnassign(Constellation.TARGO_THE_BUILDER));
-//		d.unassign(Constellation.LION);
-//		System.out.println("original can unassign targo (FALSE): " + d.canUnassign(Constellation.TARGO_THE_BUILDER));
-//		d.assign(Constellation.SAILORS_GUIDE);
-//		System.out.println("Children spawn test:");
-//		System.out.println("points remaining (33): " + d.pointsRemaining);
-//		System.out.println("Affinity original (0,0,0,4,13): " + Arrays.toString(d.affinity));
-//		Set<Node<Devotion>> children = d.spawnChildren();
-//		System.out.println("points remaining after children (33): " + d.pointsRemaining);
-//		System.out.println("Affinity after children (0,0,0,4,13): " + Arrays.toString(d.affinity));
-//		System.out.println("List of children size: " + children.size());
-//		int i = 1;
-//		for (Node<Devotion> child : children) {
-//			System.out.println(i + ":");
-//			System.out.println(child.getPathAnnotation());
-//			i++;
-//		}
-//
-//	}
 }

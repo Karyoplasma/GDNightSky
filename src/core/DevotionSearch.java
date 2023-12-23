@@ -17,7 +17,7 @@ public class DevotionSearch {
 		while (!openSet.isEmpty()) {
 
 			Node<Devotion> current = openSet.poll();
-			
+
 			if (current.equals(goal)) {
 				return current;
 			}
@@ -64,9 +64,9 @@ public class DevotionSearch {
 		}
 		double weightMissing = 1.5;
 		double weightWrong = 2.5;
+		double weightCorrect = (correctDevotion == 0) ? 0.25 : correctDevotion;
 
-		// (weighted missing + weighted wrong) / correct
-		double heuristicValue = (weightMissing * missingDevotion + weightWrong * wrongDevotion) / correctDevotion;
+		double heuristicValue = (weightMissing * missingDevotion + weightWrong * wrongDevotion) / weightCorrect;
 
 		return heuristicValue;
 	}
@@ -84,48 +84,4 @@ public class DevotionSearch {
 		}
 		return buffer.toString();
 	}
-
-//	public static void main(String[] args) {
-//		Devotion goal = new Devotion();
-//		Devotion start = new Devotion();
-//		goal.assign(Constellation.TORTOISE);
-//		goal.assign(Constellation.LION);
-//		goal.assign(Constellation.TSUNAMI);
-//		goal.assign(Constellation.TARGO_THE_BUILDER);
-//		goal.assign(Constellation.ULO_THE_KEEPER_OF_THE_WATERS);
-//		goal.assign(Constellation.STAG);
-//		goal.assign(Constellation.LIZARD);
-//		goal.assign(Constellation.ISHTAK_THE_SPRING_MAIDEN);
-//		//help
-//		start.assign(Constellation.TORTOISE);
-//		start.assign(Constellation.LION);
-//		start.assign(Constellation.WRAITH);
-//		start.assign(Constellation.TSUNAMI);
-//		start.assign(Constellation.TARGO_THE_BUILDER);
-//		start.assign(Constellation.ULO_THE_KEEPER_OF_THE_WATERS);
-//		start.assign(Constellation.STAG);
-//		start.assign(Constellation.LIZARD);
-//		start.assign(Constellation.LIGHT_OF_EMPYRION);
-//		start.assign(Constellation.ISHTAK_THE_SPRING_MAIDEN);
-//		Devotion test = new Devotion(start);
-//		test.assign(Constellation.LIGHT_OF_EMPYRION);
-//		Node<Devotion> testNode = new Node<Devotion>(test, "");	
-//		Node<Devotion> startNode = new Node<Devotion>(start, "Start");
-//		Node<Devotion> goalNode = new Node<Devotion>(goal, "Goal");
-//		System.out.println(startNode.equals(goalNode));
-//		startNode.setHeuristicCost(estimateCostToGoal(startNode, goalNode));
-//		testNode.setHeuristicCost(estimateCostToGoal(testNode, goalNode));
-//		goalNode.setHeuristicCost(estimateCostToGoal(goalNode, goalNode));
-//		System.out.println("Heuristic cost (start -> goal): " + startNode.getHeuristicCost());
-//		System.out.println("Heuristic cost (test -> goal): " + testNode.getHeuristicCost());
-//		System.out.println("Heuristic cost (goal -> goal): " + goalNode.getHeuristicCost());
-//		System.out.println("start.compareTo(test): " + startNode.compareTo(testNode));
-//		System.out.println("test.compareTo(goal): " + testNode.compareTo(goalNode));
-//		System.out.println("Searching for:");
-//		System.out.println(String.format("%s, remaining: %d", Arrays.toString(goal.getAffinity()), goal.getPointsRemaining()));
-//		Node<Devotion> result = aStarSearch(startNode, goalNode);
-//		System.out.println("-------------FOUND-----------------");
-//		System.out.println(reconstructPath(result));
-//		
-//	}
 }

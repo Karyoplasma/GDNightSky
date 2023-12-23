@@ -11,6 +11,7 @@ public class Node<T> implements Comparable<Node<T>> {
 	Set<Node<T>> children;
 	private double costFromStart, heuristicCost;
 
+	@Deprecated
 	public Node(T devotion, String pathAnnotation) {
 		this.devotion = devotion;
 		this.pathAnnotiation = pathAnnotation;
@@ -18,7 +19,14 @@ public class Node<T> implements Comparable<Node<T>> {
 		this.costFromStart = 0.0;
 		this.heuristicCost = Double.MAX_VALUE;
 	}
-	
+
+	public Node(T devotion) {
+		this.devotion = devotion;
+		this.children = new HashSet<Node<T>>();
+		this.costFromStart = 0.0;
+		this.heuristicCost = Double.MAX_VALUE;
+	}
+
 	public boolean isRoot() {
 		return (parent == null);
 	}
@@ -39,11 +47,6 @@ public class Node<T> implements Comparable<Node<T>> {
 		return pathAnnotiation;
 	}
 
-	@Override
-	public int hashCode() {
-		return devotion.hashCode();
-	}
-
 	public double getCostFromStart() {
 		return costFromStart;
 	}
@@ -52,8 +55,8 @@ public class Node<T> implements Comparable<Node<T>> {
 		return 1.0;
 	}
 
-	public void setCostFromStart(double costFromStart) {
-		this.costFromStart = costFromStart;
+	public double getHeuristicCost() {
+		return heuristicCost;
 	}
 
 	public void setHeuristicCost(double heuristicCost) {
@@ -63,25 +66,33 @@ public class Node<T> implements Comparable<Node<T>> {
 	public void setParent(Node<T> parent) {
 		this.parent = parent;
 	}
-	
-	public double getHeuristicCost() {
-		return heuristicCost;
+
+	public void setCostFromStart(double costFromStart) {
+		this.costFromStart = costFromStart;
 	}
-	
+
+	public void setPathAnnotation(String pathAnnotation) {
+		this.pathAnnotiation = pathAnnotation;
+	}
+
 	@Override
-	public int compareTo(Node<T> o) {		
+	public int hashCode() {
+		return devotion.hashCode();
+	}
+
+	@Override
+	public int compareTo(Node<T> o) {
 		return Double.compare(heuristicCost, o.getHeuristicCost());
 	}
 
 	@Override
 	public boolean equals(Object obj) {
-	    if (!(obj instanceof Node<?>)) {
-	        return false;
-	    }
+		if (!(obj instanceof Node<?>)) {
+			return false;
+		}
 
-	    Node<?> otherNode = (Node<?>) obj;
+		Node<?> otherNode = (Node<?>) obj;
 
-	   return this.getValue().equals(otherNode.getValue());
+		return this.getValue().equals(otherNode.getValue());
 	}
-
 }

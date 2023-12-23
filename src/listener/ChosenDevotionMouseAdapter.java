@@ -3,6 +3,7 @@ package listener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.JTable;
+
 import model.ChosenDevotionTableModel;
 
 public class ChosenDevotionMouseAdapter extends MouseAdapter {

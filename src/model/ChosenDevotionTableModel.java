@@ -27,6 +27,11 @@ public class ChosenDevotionTableModel extends AbstractTableModel {
 		fireTableDataChanged();
 	}
 
+	public void clear() {
+		devotion.clear();
+		fireTableDataChanged();
+	}
+
 	public ArrayList<Constellation> getDevotion() {
 		return devotion;
 	}

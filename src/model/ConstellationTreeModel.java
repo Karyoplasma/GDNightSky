@@ -1,10 +1,12 @@
 package model;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import javax.swing.event.TreeModelListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
-
+import comparator.ConstellationTreeComparator;
 import core.enums.Constellation;
 
 public class ConstellationTreeModel implements TreeModel {
@@ -18,25 +20,39 @@ public class ConstellationTreeModel implements TreeModel {
 		DefaultMutableTreeNode tier1 = new DefaultMutableTreeNode("Tier 1");
 		DefaultMutableTreeNode tier2 = new DefaultMutableTreeNode("Tier 2");
 		DefaultMutableTreeNode tier3 = new DefaultMutableTreeNode("Tier 3");
-
+		ArrayList<Constellation> tier1List = new ArrayList<Constellation>();
+		ArrayList<Constellation> tier2List = new ArrayList<Constellation>();
+		ArrayList<Constellation> tier3List = new ArrayList<Constellation>();
 		for (Constellation c : Constellation.values()) {
 			switch (c.getTier()) {
 			case 0:
 				tier0.add(new DefaultMutableTreeNode(c));
 				break;
 			case 1:
-				tier1.add(new DefaultMutableTreeNode(c));
+				tier1List.add(c);
 				break;
-
 			case 2:
-				tier2.add(new DefaultMutableTreeNode(c));
+				tier2List.add(c);
 				break;
 			case 3:
-				tier3.add(new DefaultMutableTreeNode(c));
+				tier3List.add(c);
 				break;
 			default:
 				break;
 			}
+		}
+		ConstellationTreeComparator comp = new ConstellationTreeComparator();
+		Collections.sort(tier1List, comp);
+		Collections.sort(tier2List, comp);
+		Collections.sort(tier3List, comp);
+		for (Constellation con : tier1List) {
+			tier1.add(new DefaultMutableTreeNode(con));
+		}
+		for (Constellation con : tier2List) {
+			tier2.add(new DefaultMutableTreeNode(con));
+		}
+		for (Constellation con : tier3List) {
+			tier3.add(new DefaultMutableTreeNode(con));
 		}
 		root.add(tier0);
 		root.add(tier1);
@@ -77,13 +93,11 @@ public class ConstellationTreeModel implements TreeModel {
 
 	@Override
 	public void addTreeModelListener(TreeModelListener l) {
-		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	public void removeTreeModelListener(TreeModelListener l) {
-		// TODO Auto-generated method stub
 
 	}
 

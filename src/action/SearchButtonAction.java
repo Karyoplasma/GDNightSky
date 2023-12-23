@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
+import javax.swing.JOptionPane;
 import javax.swing.JTable;
 
 import core.Devotion;
@@ -36,13 +37,33 @@ public class SearchButtonAction extends AbstractAction {
 			goal.assign(c);
 		}
 
-		// IMPLEMENT THIS
-		List<Constellation> illegalConstellations = goal.isLegalConfiguration();
+		List<Constellation> illegalConstellations = goal.getIllegalConstellations();
+		StringBuffer buffer = new StringBuffer();
+		if (goal.getPointsRemaining() < 0) {
+			buffer.append(String.format("You are using %d devotion points. The maximum is 55.",
+					55 - goal.getPointsRemaining()));
+		}
+		if (!illegalConstellations.isEmpty()) {
+			if (buffer.length() != 0) {
+				buffer.append(System.getProperty("line.separator"));
+				buffer.append(System.getProperty("line.separator"));
+			}
+			buffer.append("The following constellations cannot sustain themselves:");
+			buffer.append(System.getProperty("line.separator"));
+			for (Constellation constellation : illegalConstellations) {
+				buffer.append(constellation.toString());
+				buffer.append(System.getProperty("line.separator"));
+			}
+		}
+		if (!(buffer.length() == 0)) {
+			JOptionPane.showMessageDialog(tableChosenDevotion, buffer.toString(), "Illegal Devotion",
+					JOptionPane.WARNING_MESSAGE);
+			return;
+		}
 
 		resultModel.clearPath();
-		// THIS IS UGLY, FIX THE NODE CONSTRUCTOR
-		Node<Devotion> startNode = new Node<Devotion>(start, "Start");
-		Node<Devotion> goalNode = new Node<Devotion>(goal, "Goal");
+		Node<Devotion> startNode = new Node<Devotion>(start);
+		Node<Devotion> goalNode = new Node<Devotion>(goal);
 
 		Node<Devotion> result = DevotionSearch.aStarSearch(startNode, goalNode);
 		if (result != null) {
