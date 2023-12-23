@@ -11,15 +11,6 @@ public class Node<T> implements Comparable<Node<T>> {
 	Set<Node<T>> children;
 	private double costFromStart, heuristicCost;
 
-	@Deprecated
-	public Node(T devotion, String pathAnnotation) {
-		this.devotion = devotion;
-		this.pathAnnotiation = pathAnnotation;
-		this.children = new HashSet<Node<T>>();
-		this.costFromStart = 0.0;
-		this.heuristicCost = Double.MAX_VALUE;
-	}
-
 	public Node(T devotion) {
 		this.devotion = devotion;
 		this.children = new HashSet<Node<T>>();
@@ -54,7 +45,7 @@ public class Node<T> implements Comparable<Node<T>> {
 	public double getCostTo(Node<Devotion> neighbor) {
 		return 1.0;
 	}
-
+	
 	public double getHeuristicCost() {
 		return heuristicCost;
 	}
@@ -66,7 +57,7 @@ public class Node<T> implements Comparable<Node<T>> {
 	public void setParent(Node<T> parent) {
 		this.parent = parent;
 	}
-
+	
 	public void setCostFromStart(double costFromStart) {
 		this.costFromStart = costFromStart;
 	}

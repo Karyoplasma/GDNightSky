@@ -10,11 +10,15 @@ Link to release:
 ### Features:
 - **GUI**
 	- Double click on constellations on the tree to add them.
-	- Double click on the "Chosen constellations" list to remove them
+	- Double click on the "Chosen constellations" list to remove them or click the "Clear" button to wipe them all
 	- Search bar to filter the tree for matching constellations
 - **Sanity Checks**
-	- Checks if your setup is valid. If the check doesn't pass, you will be presented with the reason why.
+	- Checks if your setup is valid. If the check doesn't pass, you will be presented with the reason why
 		- Checks for excessive amount of points
 		- Checks for constellations that don't meet the affinity requirement
-- **Fast**
-	- I tried to optimize the underlying structure to achieve a fast response.
+- **Fast and accurate**
+	- Finds the optimal path to the desired devotion setup
+	- Prefers to complete higher tier devotions as soon as possible
+	- Cannot generate an illegal path
+	- I tried to optimize the underlying structure to achieve a fast response
+		- If you find a devotion setup that takes an unreasonable amount of time, please tell me so I can tweak the search

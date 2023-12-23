@@ -25,6 +25,7 @@ import model.ResultTableModel;
 import javax.swing.JButton;
 import javax.swing.JTextField;
 import java.awt.Rectangle;
+import javax.swing.JProgressBar;
 
 public class GDNightSky {
 
@@ -37,6 +38,7 @@ public class GDNightSky {
 	private JButton btnSearch;
 	private JTextField textFieldFilter;
 	private JButton btnClear;
+	private JProgressBar progressBar;
 
 	/**
 	 * Launch the application.
@@ -116,7 +118,7 @@ public class GDNightSky {
 		panelSeparator.add(separator, BorderLayout.CENTER);
 
 		JScrollPane scrollPaneResult = new JScrollPane();
-		frame.getContentPane().add(scrollPaneResult, "cell 0 4 2 2,grow");
+		frame.getContentPane().add(scrollPaneResult, "cell 0 4 2 1,grow");
 
 		tableResult = new JTable(new ResultTableModel());
 		tableResult.setFillsViewportHeight(true);
@@ -126,8 +128,15 @@ public class GDNightSky {
 		tableResult.setRowSelectionAllowed(false);
 		tableResult.setShowGrid(false);
 		scrollPaneResult.setViewportView(tableResult);
+		
+		progressBar = new JProgressBar();
+		progressBar.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		frame.getContentPane().add(progressBar, "cell 0 5 2 1,grow");
 
-		btnSearch = new JButton(new SearchButtonAction(tableChosenDevotion, tableResult));
+		btnSearch = new JButton();
+		SearchButtonAction searchButtonAction = new SearchButtonAction(tableChosenDevotion, tableResult, btnSearch, progressBar);
+		btnSearch.setAction(searchButtonAction);
+		
 		btnSearch.setFont(new Font("Tahoma", Font.BOLD, 14));
 		frame.getContentPane().add(btnSearch, "cell 2 5,growx,aligny bottom");
 

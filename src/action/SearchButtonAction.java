@@ -5,7 +5,9 @@ import java.util.List;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
+import javax.swing.JButton;
 import javax.swing.JOptionPane;
+import javax.swing.JProgressBar;
 import javax.swing.JTable;
 
 import core.Devotion;
@@ -19,29 +21,33 @@ public class SearchButtonAction extends AbstractAction {
 
 	private static final long serialVersionUID = 6504529512326768326L;
 	private JTable tableResults, tableChosenDevotion;
-
-	public SearchButtonAction(JTable tableChosenDevotion, JTable tableResults) {
+	private JButton searchButton;
+	private DevotionSearchWorker workerThread;
+	private Node<Devotion> start, goal;
+	
+	public SearchButtonAction(JTable tableChosenDevotion, JTable tableResults, JButton searchButton, JProgressBar progressBar) {
 		putValue(Action.NAME, "Search");
 		this.tableChosenDevotion = tableChosenDevotion;
 		this.tableResults = tableResults;
+		this.searchButton = searchButton;
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		ChosenDevotionTableModel chosenDevotionModel = (ChosenDevotionTableModel) tableChosenDevotion.getModel();
 		ResultTableModel resultModel = (ResultTableModel) tableResults.getModel();
-		Devotion start = new Devotion();
-		Devotion goal = new Devotion();
+		Devotion startDevotion = new Devotion();
+		Devotion goalDevotion = new Devotion();
 
 		for (Constellation c : chosenDevotionModel.getDevotion()) {
-			goal.assign(c);
+			goalDevotion.assign(c);
 		}
 
-		List<Constellation> illegalConstellations = goal.getIllegalConstellations();
+		List<Constellation> illegalConstellations = goalDevotion.getIllegalConstellations();
 		StringBuffer buffer = new StringBuffer();
-		if (goal.getPointsRemaining() < 0) {
+		if (goalDevotion.getPointsRemaining() < 0) {
 			buffer.append(String.format("You are using %d devotion points. The maximum is 55.",
-					55 - goal.getPointsRemaining()));
+					55 - goalDevotion.getPointsRemaining()));
 		}
 		if (!illegalConstellations.isEmpty()) {
 			if (buffer.length() != 0) {
@@ -62,14 +68,15 @@ public class SearchButtonAction extends AbstractAction {
 		}
 
 		resultModel.clearPath();
-		Node<Devotion> startNode = new Node<Devotion>(start);
-		Node<Devotion> goalNode = new Node<Devotion>(goal);
-
-		Node<Devotion> result = DevotionSearch.aStarSearch(startNode, goalNode);
-		if (result != null) {
-			String path = DevotionSearch.reconstructPath(result);
-			resultModel.addPath(path);
-		}
+		
+		this.start = new Node<Devotion>(startDevotion);
+		this.goal = new Node<Devotion>(goalDevotion);
+		searchButton.setEnabled(false);
+		workerThread = new DevotionSearchWorker(searchButton, tableResults.getModel());
+		workerThread.execute();
 	}
-
+	
+	Node<Devotion> performSearch() {
+        return DevotionSearch.aStarSearch(start, goal);
+    }
 }
