@@ -38,7 +38,6 @@ public class SearchButtonAction extends AbstractAction {
 		ResultTableModel resultModel = (ResultTableModel) tableResults.getModel();
 		Devotion startDevotion = new Devotion();
 		Devotion goalDevotion = new Devotion();
-
 		for (Constellation c : chosenDevotionModel.getDevotion()) {
 			goalDevotion.assign(c);
 		}

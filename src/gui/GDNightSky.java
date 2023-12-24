@@ -139,7 +139,7 @@ public class GDNightSky {
 		
 		btnSearch.setFont(new Font("Tahoma", Font.BOLD, 14));
 		frame.getContentPane().add(btnSearch, "cell 2 5,growx,aligny bottom");
-
+		
 	}
 
 }

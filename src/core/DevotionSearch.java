@@ -57,7 +57,13 @@ public class DevotionSearch {
 					// the higher tier the missing devotion is the lower the punishment
 					// this should guide the search towards preferring to take low tier
 					// constellations to meet requirements
-					missingDevotion += 4 - c.getTier();
+					// TODO test with active priority
+					//missingDevotion += 4 - c.getTier();
+					if (c.hasActive()) {
+						missingDevotion += 500;
+					} else {
+						missingDevotion += 1;
+					}
 				}
 			} else {
 				if (current.isAssigned(c)) {
@@ -69,8 +75,8 @@ public class DevotionSearch {
 			}
 		}
 		// weights are guesswork, might change in the future
-		double weightMissing = 0.75; // was 1.25
-		double weightWrong = 2.0; // was 2.5
+		double weightMissing = 1.25; // was 0.75
+		double weightWrong = 2.0; // was 2.0
 		double weightCorrect = (correctDevotion == 0) ? 0.25 : correctDevotion;
 		// weightCorrect needs to be adjusted or else setups that don't have a crossroad
 		// will have no guidance.
