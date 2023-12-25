@@ -17,8 +17,10 @@ Link to release:
 		- Checks for excessive amount of points
 		- Checks for constellations that don't meet the affinity requirement
 - **Fast and accurate**
-	- Finds the optimal path to the desired devotion setup
-	- Prefers to complete higher tier devotions as soon as possible
 	- Cannot generate an illegal path
 	- I tried to optimize the underlying structure to achieve a fast response
 		- If you find a devotion setup that takes an unreasonable amount of time, please tell me so I can tweak the search
+- **Customizable**
+	- You can choose whether you want the program to prioritize constellations with an active
+		- A search that prioritizes actives often produces a more complicated path but is good during leveling because you get levels on your active constellations earlier
+		- If you have all devotion points and just need to respec, it's best to leave the box unchecked for a path that takes less steps

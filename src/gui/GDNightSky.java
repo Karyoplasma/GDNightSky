@@ -21,11 +21,10 @@ import model.ChosenDevotionTableModel;
 import model.ConstellationTreeFilterModel;
 import model.ConstellationTreeModel;
 import model.ResultTableModel;
-
 import javax.swing.JButton;
 import javax.swing.JTextField;
 import java.awt.Rectangle;
-import javax.swing.JProgressBar;
+import javax.swing.JCheckBox;
 
 public class GDNightSky {
 
@@ -38,8 +37,8 @@ public class GDNightSky {
 	private JButton btnSearch;
 	private JTextField textFieldFilter;
 	private JButton btnClear;
-	private JProgressBar progressBar;
-
+	private JCheckBox chckbxPreferActives;
+	
 	/**
 	 * Launch the application.
 	 */
@@ -129,12 +128,12 @@ public class GDNightSky {
 		tableResult.setShowGrid(false);
 		scrollPaneResult.setViewportView(tableResult);
 		
-		progressBar = new JProgressBar();
-		progressBar.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		frame.getContentPane().add(progressBar, "cell 0 5 2 1,grow");
-
+		chckbxPreferActives = new JCheckBox("Prefer actives");
+		chckbxPreferActives.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		frame.getContentPane().add(chckbxPreferActives, "cell 1 5,alignx right");
+		
 		btnSearch = new JButton();
-		SearchButtonAction searchButtonAction = new SearchButtonAction(tableChosenDevotion, tableResult, btnSearch, progressBar);
+		SearchButtonAction searchButtonAction = new SearchButtonAction(tableChosenDevotion, tableResult, btnSearch, chckbxPreferActives);
 		btnSearch.setAction(searchButtonAction);
 		
 		btnSearch.setFont(new Font("Tahoma", Font.BOLD, 14));

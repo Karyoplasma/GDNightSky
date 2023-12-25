@@ -45,7 +45,7 @@ public class Node<T> implements Comparable<Node<T>> {
 	public double getCostTo(Node<Devotion> neighbor) {
 		return 1.0;
 	}
-	
+
 	public double getHeuristicCost() {
 		return heuristicCost;
 	}
@@ -57,7 +57,7 @@ public class Node<T> implements Comparable<Node<T>> {
 	public void setParent(Node<T> parent) {
 		this.parent = parent;
 	}
-	
+
 	public void setCostFromStart(double costFromStart) {
 		this.costFromStart = costFromStart;
 	}

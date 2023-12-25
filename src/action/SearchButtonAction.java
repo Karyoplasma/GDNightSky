@@ -2,14 +2,12 @@ package action;
 
 import java.awt.event.ActionEvent;
 import java.util.List;
-
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JOptionPane;
-import javax.swing.JProgressBar;
 import javax.swing.JTable;
-
 import core.Devotion;
 import core.DevotionSearch;
 import core.Node;
@@ -23,13 +21,16 @@ public class SearchButtonAction extends AbstractAction {
 	private JTable tableResults, tableChosenDevotion;
 	private JButton searchButton;
 	private DevotionSearchWorker workerThread;
+	private JCheckBox chckbxPreferActives;
 	private Node<Devotion> start, goal;
-	
-	public SearchButtonAction(JTable tableChosenDevotion, JTable tableResults, JButton searchButton, JProgressBar progressBar) {
+
+	public SearchButtonAction(JTable tableChosenDevotion, JTable tableResults, JButton searchButton,
+			JCheckBox chckbxPreferActives) {
 		putValue(Action.NAME, "Search");
 		this.tableChosenDevotion = tableChosenDevotion;
 		this.tableResults = tableResults;
 		this.searchButton = searchButton;
+		this.chckbxPreferActives = chckbxPreferActives;
 	}
 
 	@Override
@@ -67,15 +68,15 @@ public class SearchButtonAction extends AbstractAction {
 		}
 
 		resultModel.clearPath();
-		
+
 		this.start = new Node<Devotion>(startDevotion);
 		this.goal = new Node<Devotion>(goalDevotion);
 		searchButton.setEnabled(false);
 		workerThread = new DevotionSearchWorker(searchButton, tableResults.getModel());
 		workerThread.execute();
 	}
-	
+
 	Node<Devotion> performSearch() {
-        return DevotionSearch.aStarSearch(start, goal);
-    }
+		return DevotionSearch.aStarSearch(start, goal, chckbxPreferActives.isSelected());
+	}
 }

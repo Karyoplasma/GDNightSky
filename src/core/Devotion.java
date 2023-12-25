@@ -14,19 +14,19 @@ public class Devotion {
 	private boolean[] constellations;
 	private int[] affinity;
 	private int pointsRemaining;
-	
+
 	public Devotion() {
 		this.constellations = new boolean[Constellation.values().length];
 		this.affinity = new int[5];
 		this.pointsRemaining = 55;
 	}
-	
+
 	public Devotion(Devotion devotion) {
 		this.constellations = Arrays.copyOf(devotion.constellations, devotion.constellations.length);
 		this.affinity = Arrays.copyOf(devotion.affinity, 5);
 		this.pointsRemaining = devotion.pointsRemaining;
 	}
-	
+
 	public Set<Node<Devotion>> spawnChildren() {
 		Set<Node<Devotion>> children = new HashSet<Node<Devotion>>();
 		for (Constellation constellation : Constellation.values()) {
@@ -43,7 +43,7 @@ public class Devotion {
 				Node<Devotion> child = new Node<Devotion>(unassignChild);
 				child.setPathAnnotation(String.format("- %s", constellation.toString()));
 				children.add(child);
-				//swap logic not used because of side effects
+				// swap logic not used because of side effects
 //				for (Constellation swap : Constellation.values()) {
 //					if (swap == constellation) {
 //						continue;
@@ -61,7 +61,7 @@ public class Devotion {
 		}
 		return children;
 	}
-	
+
 	public Devotion spawnWithAssign(Constellation constellation) {
 		if (!canAssign(constellation)) {
 			return null;
@@ -143,7 +143,7 @@ public class Devotion {
 	public boolean isAssigned(Constellation constellation) {
 		return constellations[constellation.ordinal()];
 	}
-	
+
 	public List<Constellation> getIllegalConstellations() {
 		List<Constellation> ret = new ArrayList<Constellation>();
 		for (Constellation constellation : Constellation.values()) {
@@ -158,19 +158,19 @@ public class Devotion {
 		}
 		return ret;
 	}
-	
+
 	public int[] getAffinity() {
 		return affinity;
 	}
-	
+
 	public int getAffinity(Affinity affinity) {
 		return this.affinity[affinity.ordinal()];
 	}
-	
+
 	public int getPointsRemaining() {
 		return pointsRemaining;
 	}
-	
+
 	@Override
 	public int hashCode() {
 		return Arrays.hashCode(constellations);
@@ -183,5 +183,20 @@ public class Devotion {
 		}
 		Devotion other = (Devotion) o;
 		return Arrays.equals(constellations, other.constellations);
+	}
+
+	@Override
+	public String toString() {
+		StringBuffer buffer = new StringBuffer("[");
+		for (int i = 0; i < constellations.length; i++) {
+			if (constellations[i]) {
+				buffer.append(Constellation.values()[i].toString());
+				buffer.append(", ");
+			}
+
+		}
+		buffer.setLength((buffer.length() - 2) < 0 ? 1 : buffer.length() - 2);
+		buffer.append("]");
+		return buffer.toString();
 	}
 }
