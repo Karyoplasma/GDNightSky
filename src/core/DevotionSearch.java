@@ -63,7 +63,20 @@ public class DevotionSearch {
 		for (Constellation c : Constellation.values()) {
 			if (goal.isAssigned(c)) {
 				if (current.isAssigned(c)) {
-					correctDevotion++;
+					if (prioritizeActives && c.getTier() == 0) {
+						int t1ActivesMissing = 0;
+						for (Constellation con : activeConstellations) {
+							if (!current.isAssigned(con) && con.getTier() == 1) {
+								t1ActivesMissing++;
+							}
+						}
+						if (t1ActivesMissing == 0) {
+							correctDevotion++;
+						}
+					} else {
+						correctDevotion++;
+					}
+
 				} else {
 					// the higher tier the missing devotion is the lower the punishment
 					// this should guide the search towards preferring to take low tier
