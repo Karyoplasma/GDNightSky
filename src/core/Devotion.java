@@ -80,7 +80,7 @@ public class Devotion {
 		return spawn;
 	}
 
-	private boolean canAssign(Constellation constellation) {
+	public boolean canAssign(Constellation constellation) {
 		if (this.isAssigned(constellation)) {
 			return false;
 		}

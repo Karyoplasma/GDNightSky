@@ -1,6 +1,7 @@
 package core;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -10,15 +11,19 @@ import core.enums.Constellation;
 
 public class DevotionSearch {
 	private static HashSet<Constellation> activeConstellations = new HashSet<Constellation>();
-
+	private static HashSet<Constellation> goalConstellations = new HashSet<Constellation>();
+	
 	public static Node<Devotion> aStarSearch(Node<Devotion> start, Node<Devotion> goal, boolean prioritizeActives) {
 		PriorityQueue<Node<Devotion>> openSet = new PriorityQueue<Node<Devotion>>();
 		HashSet<Node<Devotion>> closedSet = new HashSet<Node<Devotion>>();
 
-		if (prioritizeActives) {
+		if (true) {
 			for (Constellation c : Constellation.values()) {
-				if (c.hasActive() && goal.getValue().isAssigned(c) && c.getTier() < 3) {
+				if (c.hasActive() && goal.getValue().isAssigned(c)) {
 					activeConstellations.add(c);
+				}
+				if (goal.getValue().isAssigned(c)) {
+					goalConstellations.add(c);
 				}
 			}
 		}
@@ -26,7 +31,7 @@ public class DevotionSearch {
 
 		while (!openSet.isEmpty()) {
 			Node<Devotion> current = openSet.poll();
-
+			System.out.println(current);
 			if (current.equals(goal)) {
 				return current;
 			}
@@ -41,7 +46,7 @@ public class DevotionSearch {
 
 				if (!openSet.contains(neighbor) || tentativeCost < neighbor.getCostFromStart()) {
 					neighbor.setCostFromStart(tentativeCost);
-					neighbor.setHeuristicCost(estimateCostToGoal(neighbor, goal, prioritizeActives));
+					neighbor.setHeuristicCost(estimateDistanceToGoal(neighbor, goal, prioritizeActives));
 					neighbor.setParent(current);
 					openSet.add(neighbor);
 				}
@@ -51,12 +56,91 @@ public class DevotionSearch {
 		return null;
 
 	}
-	
+
 	private static double estimateDistanceToGoal(Node<Devotion> currentNode, Node<Devotion> goalNode,
 			boolean prioritizeActives) {
-		return 0.0;
+		if (prioritizeActives) {
+			return estimateDistanceToGoalActives(currentNode, goalNode);
+		}
+		Devotion current = currentNode.getValue();
+		Devotion goal = goalNode.getValue();
+		double pointsSpent = 55.0 - current.getPointsRemaining();
+		int missingDevotion = 0;
+		int wrongDevotion = 0;
+		double irrelevantAffinities = 0.0;
+		int[] parentAffinities;
+		if (!(currentNode.getParent() == null)) {
+			parentAffinities = currentNode.getParent().getValue().getAffinity();
+		} else {
+			parentAffinities = new int[5];
+		}
+
+		for (Constellation c : Constellation.values()) {
+			if (goal.isAssigned(c)) {
+				if (!current.isAssigned(c)) {
+					missingDevotion++;
+				}
+			} else {
+				if (current.isAssigned(c)) {
+					wrongDevotion++;
+					for (Constellation x : goalConstellations) {
+						for (int i = 0; i < 5; i++) {
+							// the devotion is irrelevant if the affinity it gives doesn't get closer to the missing con's req
+							
+								if (c.getAffinityBonus()[i] > 0 && parentAffinities[i] >= x.getRequiredAffinity()[i]) {
+									irrelevantAffinities++;
+								}
+						}
+						irrelevantAffinities /= 5.0;
+					}
+					
+					
+				}
+			}
+		}
+		if ((missingDevotion + wrongDevotion) == 0) {
+			return 0.0;
+		}
+		//System.out.println(String.format("%s: %d, %d, %f", current, missingDevotion, wrongDevotion, irrelevantAffinities));
+		return missingDevotion + wrongDevotion + irrelevantAffinities + (pointsSpent / 55.0);
 	}
-	
+
+	private static double estimateDistanceToGoalActives(Node<Devotion> currentNode, Node<Devotion> goalNode) {
+		Devotion current = currentNode.getValue();
+		Devotion goal = goalNode.getValue();
+		double pointsSpent = 55.0 - current.getPointsRemaining();
+		int missingDevotion = 0;
+		int wrongDevotion = 0;
+		int[] parentAffinities;
+		if (!(currentNode.getParent() == null)) {
+			parentAffinities = currentNode.getParent().getValue().getAffinity();
+		} else {
+			parentAffinities = new int[5];
+		}
+		for (Constellation c : Constellation.values()) {
+			if (c.hasActive()) {
+				missingDevotion++;
+				if (current.canAssign(c)) {
+					missingDevotion += 4;
+				}
+			}
+
+			if (!c.hasActive()) {
+				missingDevotion++;
+				for (Constellation goalActive : activeConstellations) {
+					for (int i = 0; i < 5; i++) {
+						int affinityWithoutWrong = current.getAffinity()[i] - c.getAffinityBonus()[i];
+						if (goalActive.getRequiredAffinity()[i] != 0
+								&& goalActive.getRequiredAffinity()[i] > affinityWithoutWrong) {
+						}
+					}
+
+				}
+			}
+		}
+		return 0;
+	}
+
 	private static double estimateCostToGoal(Node<Devotion> currentNode, Node<Devotion> goalNode,
 			boolean prioritizeActives) {
 		Devotion current = currentNode.getValue();

@@ -86,4 +86,9 @@ public class Node<T> implements Comparable<Node<T>> {
 
 		return this.getValue().equals(otherNode.getValue());
 	}
+	
+	@Override
+	public String toString() {
+		return String.format("%s; heuristic: %f", devotion.toString(), heuristicCost);
+	}
 }
