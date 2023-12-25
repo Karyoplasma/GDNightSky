@@ -5,7 +5,7 @@ Just add all fully picked devotions to the list and press search. Complicated se
 
 Written in Java, JRE version is 1.8. Uses MigLayout manager (packaged into the release .jar).
 
-Link to release: 
+Link to latest release: https://github.com/Karyoplasma/GDNightSky/releases/tag/1.0.0
 
 ### Features:
 - **GUI**
