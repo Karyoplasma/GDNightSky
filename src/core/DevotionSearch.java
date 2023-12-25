@@ -51,7 +51,12 @@ public class DevotionSearch {
 		return null;
 
 	}
-
+	
+	private static double estimateDistanceToGoal(Node<Devotion> currentNode, Node<Devotion> goalNode,
+			boolean prioritizeActives) {
+		return 0.0;
+	}
+	
 	private static double estimateCostToGoal(Node<Devotion> currentNode, Node<Devotion> goalNode,
 			boolean prioritizeActives) {
 		Devotion current = currentNode.getValue();
